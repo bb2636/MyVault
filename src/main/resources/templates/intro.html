@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>MyVault 소개</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 40px;
+            background-color: #f9f9f9;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #333;
+        }
+        .definition {
+            font-size: 1.1em;
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #f0f4f8;
+            border-left: 5px solid #4a90e2;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>MyVault</h1>
+    <p><strong>vault</strong> - 문서와 파일을 저장하고 관리하는 저장소</p>
+    <p>나만의 금고 (소장품, 스토리 담는 공간)</p>
+
+    <h2>서비스 개요</h2>
+    <div class="definition">
+        소장품과 그에 담긴 스토리를 기록하고, 프라이빗하게 보관하거나 오픈하여 모두와 나눌 수 있는 소셜 플랫폼입니다.
+        <br><br>
+        소장품을 프라이빗/공개로 구분해 등록하고, 공개된 소장품은 전체 게시판에서 다른 사용자들과 댓글로 교류할 수 있는 커뮤니티형 소장품 관리 플랫폼입니다.
+    </div>
+
+    <h2>“소장품”</h2>
+    <div class="definition">
+        사용자가 개인적으로 애정을 가지고 기록하거나 공유하고 싶은 실물 또는 디지털 형태의 수집 대상 전반을 의미합니다.<br>
+        단순한 물건을 넘어, 개인의 취향과 이야기를 담은 기록의 매개체입니다. 피규어, 소설, 엽서, 자작 이미지 또는 작품 등도 모두 소장품이 될 수 있습니다.
+    </div>
+
+    <h2>소장품 예시</h2>
+    <table>
+        <tr>
+            <th>유형</th>
+            <th>예시</th>
+        </tr>
+        <tr>
+            <td>🎨 취미 수집품</td>
+            <td>피규어, 트레이딩 카드, 미니어처, 장난감</td>
+        </tr>
+        <tr>
+            <td>📚 콘텐츠 기반</td>
+            <td>좋아하는 소설, 만화책, CD, 블루레이</td>
+        </tr>
+        <tr>
+            <td>🌱 생활 소장품</td>
+            <td>식물, 키우는 반려 식물, 디퓨저, 향수 등</td>
+        </tr>
+        <tr>
+            <td>🧳 여행/경험 기반</td>
+            <td>기념품, 스티커, 엽서, 티켓 모음 등</td>
+        </tr>
+        <tr>
+            <td>💻 디지털 소장품</td>
+            <td>영화 포스터, 배경화면, 자작 일러스트 등</td>
+        </tr>
+        <tr>
+            <td>🖼️ 아트웍/디자인</td>
+            <td>본인이 만든 작품, 전시품, 핸드메이드 굿즈</td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

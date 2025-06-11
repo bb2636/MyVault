@@ -1,10 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title th:text="'Collection Detail - ' + ${item.title}">Collection Detail</title>
 </head>
 <body>
+    <h1 th:text="${item.title}">Collection Title</h1>
+    <p th:text="${item.description}">Collection description</p>
+    <img th:src="@{'/uploads/' + ${item.image}}" alt="대표이미지" width="300"/>
+    <hr>
 
+    <h2>Comments</h2>
+    <div th:if="${comments.isEmpty()}">
+        <p>댓글이 없습니다</p>
+    </div>
+    <div th:unless="${comments.isEmpty()}">
+        <ul>
+            <li th:each="comment : ${comments}">
+                <p th:text="${comment.content}">댓글 내용</p>
+                <small th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')}">작성 일자</small>
+            </li>
+        </ul>
+    </div>
 </body>
 </html>

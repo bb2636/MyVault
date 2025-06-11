@@ -13,7 +13,9 @@
     <div th:unless="${items.isEmpty()}">
         <ul>
             <li th:each="item : ${items}">
-                <h3 th:text="${item.title}">Collection Title</h3>
+                <h3 >
+                    <a th:href="@{'/items/' + ${item.id}}" th:text="${item.title}">Collection Title</a>
+                </h3>
                 <p th:text="${item.description}">Collection Description</p>
                 <img th:src="@{'/uploads/' + ${item.image}}" alt="대표이미지" width="200">
                 <hr>

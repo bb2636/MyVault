@@ -1,6 +1,7 @@
 package org.example.myvault.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.myvault.domain.CollectionItem;
 import org.example.myvault.domain.Comment;
 import org.example.myvault.domain.User;
@@ -16,6 +17,7 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 @RequestMapping("/items")
 public class ItemController {
     private final CollectionItemService collectionItemService;
@@ -59,4 +61,15 @@ public class ItemController {
         return "redirect:/items";
     }
 
+    //마이페이지용 조회
+    @GetMapping("/my-items")
+    public String myItems(Model model) {
+        User user = userService.findById(1L)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid user Id"));
+
+        List<CollectionItem> myItem = collectionItemService.findByUser(user);
+        log.info("조회된 아이템 수: {}", myItem.size());
+        model.addAttribute("items", myItem);
+        return "items/my-item";
+    }
 }

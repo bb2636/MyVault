@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>My Items</title>
+</head>
+<body>
+    <h1>My Collections</h1>
+    <div th:if="${#lists.isEmpty(items)}">
+        <p>등록된 소장품이 없습니다</p>
+    </div>
+    <div th:unless="${#lists.isEmpty(items)}">
+        <ul>
+            <li th:each="item : ${items}">
+                <h3>
+                    <a th:href="@{'/items/' + ${item.id}}" th:text="${item.title}">Collection Title</a>
+                </h3>
+                <p>private check :
+                    <span th:text="${item.isPrivate()} ? '&#x2713;' : '&#x2717;'"></span></p>
+                <p th:text="${item.description}">Collection Description</p>
+                <img th:src="@{'/uploads/' + ${item.image}}" alt="대표이미지" width="200">
+                <hr>
+            </li>
+        </ul>
+    </div>
+</body>
+</html>

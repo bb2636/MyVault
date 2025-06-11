@@ -2,6 +2,7 @@ package org.example.myvault.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.myvault.domain.CollectionItem;
+import org.example.myvault.domain.User;
 import org.example.myvault.repository.CollectionItemRepository;
 import org.springframework.stereotype.Service;
 
@@ -23,5 +24,9 @@ public class CollectionItemService {
 
     public Optional<CollectionItem> findById(Long id) {
         return collectionItemRepository.findById(id);
+    }
+
+    public List<CollectionItem> findByUser(User user) {
+        return collectionItemRepository.findByUser(user);
     }
 }

@@ -1,10 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Collection Add Form</title>
 </head>
 <body>
+    <h1>Collection Add Form</h1>
+   <form th:action="@{/items/add}" th:object="${item}" method="post" ><!-- enctype="multipart/form-data">-->
+        <label>Title</label>
+        <input type="text" name="title" th:field="*{title}" required /> <br>
 
+        <label>Description</label>
+        <textarea name="description" th:field="*{description}" rows="5" cols="40" required></textarea> <br>
+
+        <label>Image</label>
+        <input type="text" name="image" th:field="*{image}" required /> <br>
+
+        <label>Private check</label>
+        <input type="checkbox" name="private" th:field="*{private}" /> <br>
+        <button type="submit" value="Submit" name="submit">submit</button>
+    </form>
 </body>
 </html>

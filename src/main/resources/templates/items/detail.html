@@ -10,10 +10,12 @@
     <img th:src="@{'/uploads/' + ${item.image}}" alt="대표이미지" width="300"/>
     <hr>
 
+<!--댓글 목록 리스트 (댓글 없을 경우)-->
     <h2>Comments</h2>
     <div th:if="${comments.isEmpty()}">
         <p>댓글이 없습니다</p>
     </div>
+    <!--댓글 목록 리스트-->
     <div th:unless="${comments.isEmpty()}">
         <ul>
             <li th:each="comment : ${comments}">
@@ -22,5 +24,11 @@
             </li>
         </ul>
     </div>
+    <!--댓글 작성 폼-->
+    <form th:action="@{/comments/add}" method="post">
+        <input type="hidden" name="itemId" th:value="${item.id}">
+        <textarea name="content" rows="3" cols="30" required></textarea> <br>
+        <button type="submit" name="submit">comment submit</button>
+    </form>
 </body>
 </html>

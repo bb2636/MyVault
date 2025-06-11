@@ -1,10 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Collection List</title>
 </head>
 <body>
+    <h1>Public Collection List</h1>
+    <div th:if="${items.isEmpty()}">
+        <p>등록된 소장품이 없습니다</p>
+    </div>
 
+    <div th:unless="${items.isEmpty()}">
+        <ul>
+            <li th:each="item : ${items}">
+                <h3 th:text="${item.title}">Collection Title</h3>
+                <p th:text="${item.description}">Collection Description</p>
+                <img th:src="@{'/uploads/' + ${item.image}}" alt="대표이미지" width="200">
+                <hr>
+            </li>
+        </ul>
+    </div>
 </body>
 </html>

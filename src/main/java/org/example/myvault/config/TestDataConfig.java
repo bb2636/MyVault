@@ -7,12 +7,12 @@ import org.example.myvault.repository.CollectionItemRepository;
 import org.example.myvault.repository.CommentRepository;
 import org.example.myvault.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Bean;
+//import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class TestDataConfig {
-    @Bean
+//    @Bean
     public CommandLineRunner testData(
             UserRepository userRepository,
             CollectionItemRepository collectionItemRepository,

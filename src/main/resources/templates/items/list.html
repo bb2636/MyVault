@@ -9,7 +9,12 @@
     <div th:if="${items.isEmpty()}">
         <p>등록된 소장품이 없습니다</p>
     </div>
-
+    <!--  버튼  -->
+    <div style="margin-bottom: 20px;">
+        <a href="/items/add" ><button type="button">Collection Add</button></a>
+        <a href="/items/my-items"><button type="button">My Collection</button></a>
+    </div>
+    <!--  collection list  -->
     <div th:unless="${items.isEmpty()}">
         <ul>
             <li th:each="item : ${items}">

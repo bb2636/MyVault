@@ -8,12 +8,17 @@ import org.example.myvault.domain.User;
 import org.example.myvault.service.CollectionItemService;
 import org.example.myvault.service.CommentService;
 import org.example.myvault.service.UserService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 @RequiredArgsConstructor
@@ -50,13 +55,32 @@ public class ItemController {
         return "items/form";
     }
 
+    //이미지 파일 저장 경로
+    @Value("${myvault.upload.path}")
+    private String uploadPath;
     //등록
     @PostMapping("/add")
-    public String addItem(@ModelAttribute CollectionItem item) {
+    public String addItem(@ModelAttribute CollectionItem item,
+                          @RequestParam("imageFile")MultipartFile imageFile) throws IOException {
         //임시 사용자 id = 1
         User user = userService.findById(1L).orElseThrow(() -> new IllegalArgumentException("Invalid user Id"));
         item.setUser(user);
         item.setCreatedAt(LocalDateTime.now());
+
+        //이미지 저장
+        if(!imageFile.isEmpty()) {
+            //저장경로
+            File dir = new File(uploadPath);
+            if(!dir.exists()) {
+                dir.mkdirs();
+            }
+            //파일명
+            String fileName = imageFile.getOriginalFilename();
+            String newFileName = UUID.randomUUID() + "_" + fileName;
+            //저장
+            imageFile.transferTo(new File(uploadPath + newFileName));
+            item.setImage(newFileName); //db에는 파일명만 저장
+        }
         collectionItemService.save(item);
         return "redirect:/items";
     }

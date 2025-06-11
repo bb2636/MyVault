@@ -96,4 +96,22 @@ public class ItemController {
         model.addAttribute("items", myItem);
         return "items/my-item";
     }
+
+    //삭제
+    @PostMapping("/{id}/delete")
+    public String deleteItem(@PathVariable Long id) {
+        CollectionItem item = collectionItemService.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid item Id"));
+        //이미지 삭제
+        if(item.getImage() != null) {
+            //저장된 이미지 불러옴
+            File imageFile = new File(uploadPath + item.getImage());
+            if(imageFile.exists()) {
+                imageFile.delete();
+            }
+        }
+        //db 삭제
+        collectionItemService.delete(item);
+        return "redirect:/items";
+    }
 }

@@ -29,4 +29,5 @@ public class CollectionItemService {
     public List<CollectionItem> findByUser(User user) {
         return collectionItemRepository.findByUser(user);
     }
+    public void delete(CollectionItem item) {collectionItemRepository.delete(item);}
 }

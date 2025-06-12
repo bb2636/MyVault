@@ -5,6 +5,7 @@
     <title>Collection Add Form</title>
 </head>
 <body>
+<div th:replace="fragments/header :: header"></div>
     <h1>Collection Add Form</h1>
    <form th:action="@{/items/add}" th:object="${item}" method="post" enctype="multipart/form-data">
         <label>Title : </label>

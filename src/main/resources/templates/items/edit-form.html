@@ -5,6 +5,7 @@
     <title>Edit Form</title>
 </head>
 <body>
+<div th:replace="fragments/header :: header"></div>
     <h1>Collection Edit Form</h1>
     <form th:action="@{'/items/' + ${item.id} +'/edit'}" th:object="${item}" method="post" enctype="multipart/form-data">
         <label>Title : </label>

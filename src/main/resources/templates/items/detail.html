@@ -5,6 +5,7 @@
     <title th:text="'Collection Detail - ' + ${item.title}">Collection Detail</title>
 </head>
 <body>
+<div th:replace="fragments/header :: header"></div>
     <h1 th:text="${item.title}">Collection Title</h1>
     <p th:text="${item.description}">Collection description</p>
     <img th:src="@{'/uploads/' + ${item.image}}" alt="대표이미지" width="300"/>

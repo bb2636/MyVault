@@ -59,20 +59,21 @@ public class ItemController {
     //이미지 파일 저장 경로
     @Value("${myvault.upload.path}")
     private String uploadPath;
+
     //등록
     @PostMapping("/add")
     public String addItem(@ModelAttribute CollectionItem item,
-                          @RequestParam("imageFile")MultipartFile imageFile) throws IOException {
+                          @RequestParam("imageFile") MultipartFile imageFile) throws IOException {
         //임시 사용자 id = 1
         User user = userService.findById(1L).orElseThrow(() -> new IllegalArgumentException("Invalid user Id"));
         item.setUser(user);
         item.setCreatedAt(LocalDateTime.now());
 
         //이미지 저장
-        if(!imageFile.isEmpty()) {
+        if (!imageFile.isEmpty()) {
             //저장경로
             File dir = new File(uploadPath);
-            if(!dir.exists()) {
+            if (!dir.exists()) {
                 dir.mkdirs();
             }
             //파일명
@@ -104,10 +105,10 @@ public class ItemController {
         CollectionItem item = collectionItemService.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid item Id"));
         //이미지 삭제
-        if(item.getImage() != null) {
+        if (item.getImage() != null) {
             //저장된 이미지 불러옴
             File imageFile = new File(uploadPath + item.getImage());
-            if(imageFile.exists()) {
+            if (imageFile.exists()) {
                 imageFile.delete();
             }
         }
@@ -128,7 +129,7 @@ public class ItemController {
     @PostMapping("/{id}/edit")
     public String editItem(@PathVariable Long id,
                            @ModelAttribute CollectionItem itemForm,
-                           @RequestParam("imageFile")MultipartFile imageFile) throws IOException {
+                           @RequestParam("imageFile") MultipartFile imageFile) throws IOException {
         CollectionItem item = collectionItemService.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid item id"));
 
@@ -137,11 +138,11 @@ public class ItemController {
         item.setPrivate(itemForm.isPrivate());
 
         //새 이미지 업로드 시 기존 이미지 삭제 후 교체
-        if(imageFile != null && !imageFile.isEmpty()) {
+        if (imageFile != null && !imageFile.isEmpty()) {
             //기존 이미지 삭제
-            if(item.getImage() != null) {
+            if (item.getImage() != null) {
                 File oldImage = new File(uploadPath + item.getImage());
-                if(oldImage.exists()) {
+                if (oldImage.exists()) {
                     oldImage.delete();
                 }
             }
@@ -153,5 +154,22 @@ public class ItemController {
         }
         collectionItemService.save(item);
         return "redirect:/items/" + id;
+    }
+
+    //이미지 삭제 버튼 클릭
+    @GetMapping("/{id}/delete-image")
+    public String deleteImage(@PathVariable Long id) {
+        CollectionItem item = collectionItemService.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid item Id"));
+
+        if (item.getImage() != null) {
+            File oldImage = new File(uploadPath + item.getImage());
+            if (oldImage.exists()) {
+                oldImage.delete();
+            }
+            item.setImage(null);
+        }
+        collectionItemService.save(item);
+        return "redirect:/items/" + id + "/edit";
     }
 }

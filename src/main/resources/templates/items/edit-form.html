@@ -2,23 +2,26 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Collection Add Form</title>
+    <title>Edit Form</title>
 </head>
 <body>
-    <h1>Collection Add Form</h1>
-   <form th:action="@{/items/add}" th:object="${item}" method="post" enctype="multipart/form-data">
+    <h1>Collection Edit Form</h1>
+    <form th:action="@{'/items/' + ${item.id} +'/edit'}" th:object="${item}" method="post" enctype="multipart/form-data">
         <label>Title : </label>
         <input type="text" name="title" th:field="*{title}" required /> <br>
 
         <label>Description : </label> <br>
         <textarea name="description" th:field="*{description}" rows="5" cols="40" required></textarea> <br>
 
-        <label>Image : </label>
+        <label>Current Image : </label>
+        <img th:src="@{'/uploads/' + ${item.image}}" alt="current image" width="200" /> <br>
+
+        <label>Change Image : </label>
         <input type="file" name="imageFile" required /> <br>
 
-        <label>Private check </label>
+        <label>Private check : </label>
         <input type="checkbox" name="private" th:field="*{private}" /> <br>
-        <button type="submit" value="Submit" name="submit">submit</button>
+        <button type="submit" value="Submit" name="submit">edit submit</button>
     </form>
 </body>
 </html>

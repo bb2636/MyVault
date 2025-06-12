@@ -114,4 +114,43 @@ public class ItemController {
         collectionItemService.delete(item);
         return "redirect:/items";
     }
+
+    //수정 폼 보여주기
+    @GetMapping("/{id}/edit")
+    public String showEditForm(@PathVariable Long id, Model model) {
+        CollectionItem item = collectionItemService.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid item Id"));
+        model.addAttribute("item", item);
+        return "items/edit-form";
+    }
+
+    @PostMapping("/{id}/edit")
+    public String editItem(@PathVariable Long id,
+                           @ModelAttribute CollectionItem itemForm,
+                           @RequestParam("imageFile")MultipartFile imageFile) throws IOException {
+        CollectionItem item = collectionItemService.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid item id"));
+
+        item.setTitle(itemForm.getTitle());
+        item.setDescription(itemForm.getDescription());
+        item.setPrivate(itemForm.isPrivate());
+
+        //기존 이미지 삭제 후 새 이미지 업로드
+        if(!imageFile.isEmpty()) {
+            //기존 이미지 삭제
+            if(item.getImage() != null) {
+                File oldImage = new File(uploadPath + item.getImage());
+                if(oldImage.exists()) {
+                    oldImage.delete();
+                }
+            }
+            //새 이미지 저장
+            String fileName = imageFile.getOriginalFilename();
+            String newFileName = UUID.randomUUID() + "_" + fileName;
+            imageFile.transferTo(new File(uploadPath + newFileName));
+            item.setImage(newFileName);
+        }
+        collectionItemService.save(item);
+        return "redirect:/items/" + id;
+    }
 }

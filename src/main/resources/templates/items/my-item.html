@@ -20,8 +20,11 @@
                 <p th:text="${item.description}">Collection Description</p>
                 <img th:src="@{'/uploads/' + ${item.image}}" alt="대표이미지" width="200">
                 <br>
+                <a th:href="@{'/items/' + ${item.id} + '/edit'}">
+                    <button type="button">Edit</button>
+                </a>
                 <form th:action="@{'/items/' + ${item.id} + '/delete'}" method="post" style="display: inline">
-                    <button type="submit" name="submit" onclick="return confirm('정말 삭제하시겠습니까?');">삭제</button>
+                    <button type="submit" name="submit" onclick="return confirm('정말 삭제하시겠습니까?');">Delete</button>
                 </form>
                 <hr>
             </li>

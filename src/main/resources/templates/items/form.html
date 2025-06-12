@@ -3,23 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <title>Collection Add Form</title>
+    <style>
+        .container {
+            max-width: 1200px;  /* 최대 너비 설정 */
+            margin: 0 auto;     /* 좌우 마진을 auto로 설정하여 가운데 정렬 */
+            padding: 0 20px;    /* 좌우 여백 추가 */
+        }
+
+        /* 컨테이너 내부 요소들 가운데 정렬 */
+        .content-center {
+            text-align: center;
+        }
+
+        /* 목록이나 테이블이 있다면 */
+        .items-list {
+            width: 100%;
+            margin: 20px auto;
+        }
+
+        /* 폼이 있는 경우 */
+        form {
+            width: 100%;
+            max-width: 800px;   /* 폼의 최대 너비 */
+            margin: 0 auto;
+            padding: 20px;
+        }
+    </style>
+
 </head>
 <body>
-<div th:replace="fragments/header :: header"></div>
-    <h1>Collection Add Form</h1>
-   <form th:action="@{/items/add}" th:object="${item}" method="post" enctype="multipart/form-data">
-        <label>Title : </label>
-        <input type="text" name="title" th:field="*{title}" required /> <br>
+<div class="container">
+    <div class="content-center">
+        <div th:replace="fragments/header :: header"></div>
+        <h1>Collection Add Form</h1>
+        <form th:action="@{/items/add}" th:object="${item}" method="post" enctype="multipart/form-data">
+            <label>Title : </label>
+            <input type="text" name="title" th:field="*{title}" required /> <br>
 
-        <label>Description : </label> <br>
-        <textarea name="description" th:field="*{description}" rows="5" cols="40" required></textarea> <br>
+            <label>Description : </label> <br>
+            <textarea name="description" th:field="*{description}" rows="5" cols="40" required></textarea> <br>
 
-        <label>Image : </label>
-        <input type="file" name="imageFile" required /> <br>
+            <label>Image : </label>
+            <input type="file" name="imageFile" required /> <br>
 
-        <label>Private check </label>
-        <input type="checkbox" name="private" th:field="*{private}" /> <br>
-        <button type="submit" value="Submit" name="submit">submit</button>
-    </form>
+            <label>Private check </label>
+            <input type="checkbox" name="private" th:field="*{private}" /> <br>
+            <button type="submit" value="Submit" name="submit">submit</button>
+        </form>
+    </div>
+</div>
 </body>
 </html>

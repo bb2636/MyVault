@@ -3,33 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <title th:text="'Collection Detail - ' + ${item.title}">Collection Detail</title>
+    <style>
+        .container {
+            max-width: 1200px;  /* 최대 너비 설정 */
+            margin: 0 auto;     /* 좌우 마진을 auto로 설정하여 가운데 정렬 */
+            padding: 0 20px;    /* 좌우 여백 추가 */
+        }
+
+        /* 컨테이너 내부 요소들 가운데 정렬 */
+        .content-center {
+            text-align: center;
+        }
+
+        /* 목록이나 테이블이 있다면 */
+        .items-list {
+            width: 100%;
+            margin: 20px auto;
+        }
+
+        /* 폼이 있는 경우 */
+        form {
+            width: 100%;
+            max-width: 800px;   /* 폼의 최대 너비 */
+            margin: 0 auto;
+            padding: 20px;
+        }
+    </style>
+
 </head>
 <body>
-<div th:replace="fragments/header :: header"></div>
-    <h1 th:text="${item.title}">Collection Title</h1>
-    <p th:text="${item.description}">Collection description</p>
-    <img th:src="@{'/uploads/' + ${item.image}}" alt="대표이미지" width="300"/>
-    <hr>
+<div class="container">
+    <div class="content-center">
+        <div th:replace="fragments/header :: header"></div>
+        <h1 th:text="${item.title}">Collection Title</h1>
+        <p th:text="${item.description}">Collection description</p>
+        <img th:src="@{'/uploads/' + ${item.image}}" alt="대표이미지" width="300"/>
+        <hr>
 
-<!--댓글 목록 리스트 (댓글 없을 경우)-->
-    <h2>Comments</h2>
-    <div th:if="${comments.isEmpty()}">
-        <p>댓글이 없습니다</p>
+        <!--댓글 목록 리스트 (댓글 없을 경우)-->
+        <h2>Comments</h2>
+        <div th:if="${comments.isEmpty()}">
+            <p>댓글이 없습니다</p>
+        </div>
+        <!--댓글 목록 리스트-->
+        <div th:unless="${comments.isEmpty()}">
+            <ul>
+                <li th:each="comment : ${comments}">
+                    <p th:text="${comment.content}">댓글 내용</p>
+                    <small th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')}">작성 일자</small>
+                </li>
+            </ul>
+        </div>
+        <!--댓글 작성 폼-->
+        <form th:action="@{/comments/add}" method="post">
+            <input type="hidden" name="itemId" th:value="${item.id}">
+            <textarea name="content" rows="3" cols="30" required></textarea> <br>
+            <button type="submit" name="submit">comment submit</button>
+        </form>
     </div>
-    <!--댓글 목록 리스트-->
-    <div th:unless="${comments.isEmpty()}">
-        <ul>
-            <li th:each="comment : ${comments}">
-                <p th:text="${comment.content}">댓글 내용</p>
-                <small th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')}">작성 일자</small>
-            </li>
-        </ul>
-    </div>
-    <!--댓글 작성 폼-->
-    <form th:action="@{/comments/add}" method="post">
-        <input type="hidden" name="itemId" th:value="${item.id}">
-        <textarea name="content" rows="3" cols="30" required></textarea> <br>
-        <button type="submit" name="submit">comment submit</button>
-    </form>
+</div>
 </body>
 </html>

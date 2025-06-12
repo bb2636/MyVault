@@ -8,12 +8,12 @@
 <body>
 <div class="container">
     <div class="content-center">
-        <div th:replace="fragments/header :: header"></div>
+        <div th:replace="~{fragments/header :: header}"></div>
         <h1 th:text="${item.title}">Collection Title</h1>
         <p th:text="${item.description}">Collection description</p>
-        <img th:src="@{'/uploads/' + ${item.image}}" alt="대표이미지" width="300"/>
+        <img alt="대표이미지" th:src="@{'/uploads/' + ${item.image}}" width="300"/>
 
-<!--테스트용-->
+        <!--테스트용-->
         <p>작성자 id: <span th:text="${item.user.id}"></span></p>
 
         <!--작성자 본인만 수정 삭제 버튼 표시-->
@@ -34,28 +34,67 @@
 </div>
 <div class="comments-container">
     <h2>Comments</h2>
-    
+
     <!-- 댓글 없을 경우 -->
     <div th:if="${comments.isEmpty()}">
         <p>댓글이 없습니다</p>
     </div>
-    
-    <!-- 댓글 목록 -->
-    <div th:unless="${comments.isEmpty()}" class="comment-list">
+
+    <div th:unless="${comments.isEmpty()}">
         <ul>
-            <li th:each="comment : ${comments}" class="comment-item">
-                <p th:text="${comment.content}">댓글 내용</p>
-                <small th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')}">작성 일자</small>
+            <li th:each="comment : ${comments}">
+                <th:block th:if="${comment.id} == ${editCommentId}">
+                    <!-- 수정 form 표시 -->
+                    <form method="post" th:action="@{'/comments/' + ${comment.id} + '/edit'}">
+                        <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
+                        <div>
+                            <span th:text="${comment.user.nickname}">닉네임</span> |
+                            <input name="content" style="width: 300px;" th:value="${comment.content}" type="text">
+                            <span th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')}">작성일</span>
+                        </div>
+                        <div style="display: flex; gap: 5px;">
+                            <button type="submit">저장</button>
+                            <a th:href="@{'/items/' + ${item.id}}">
+                                <button type="button">취소</button>
+                            </a>
+                        </div>
+                    </form>
+                </th:block>
+
+                <!-- 일반 댓글 표시 -->
+                <th:block th:unless="${comment.id} == ${editCommentId}">
+                    <div style="display: flex; align-items:center; justify-content:space-around;  margin-top: 5px;">
+                        <div>
+                            <span th:text="${comment.user.nickname}">닉네임</span> |
+                            <span th:text="${comment.content}">댓글 내용</span> |
+                            <span th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')}">작성일</span>
+                        </div>
+
+                        <div class="action-buttons">
+                            <th:block th:if="${comment.user.id} == ${currentUserId}">
+                                <form th:action="@{'/items/' + ${item.id} + '?editCommentId=' + ${comment.id}}" method="get"
+                                      style="display: inline">
+                                    <button class="custom-button edit-btn" type="submit">Edit</button>
+                                </form>
+                                <form method="post" style="display: inline" th:action="@{'/comments/' + ${comment.id} + '/delete'}">
+                                    <button class="delete-btn" name="submit"
+                                            onclick="return confirm('정말 삭제하시겠습니까?');" type="submit">Delete
+                                    </button>
+                                </form>
+                            </th:block>
+                        </div>
+                    </div>
+                </th:block>
             </li>
         </ul>
     </div>
-    
-    <!-- 댓글 작성 폼 -->
-    <form th:action="@{/comments/add}" method="post" class="comment-form">
-        <input type="hidden" name="itemId" th:value="${item.id}">
-        <textarea name="content" placeholder="댓글을 입력하세요" required></textarea>
-        <button type="submit">등록</button>
-    </form>
 </div>
+
+<!-- 댓글 작성 폼 -->
+<form class="comment-form" method="post" th:action="@{/comments/add}">
+    <input name="itemId" th:value="${item.id}" type="hidden">
+    <textarea name="content" placeholder="댓글을 입력하세요" required></textarea>
+    <button type="submit">등록</button>
+</form>
 </body>
 </html>

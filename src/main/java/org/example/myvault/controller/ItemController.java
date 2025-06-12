@@ -39,13 +39,16 @@ public class ItemController {
 
     //상세조회
     @GetMapping("/{id}")
-    public String getItem(@PathVariable Long id, Model model) {
+    public String getItem(@PathVariable Long id,
+                          @RequestParam(value = "editCommentId", required = false) Long editCommentId,
+                          Model model) {
         CollectionItem item = collectionItemService.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid item Id"));
         List<Comment> comments = commentService.findByCollectionItem(item);
         model.addAttribute("item", item);
         model.addAttribute("comments", comments);
         model.addAttribute("currentUserId", 1L);
+        model.addAttribute("editCommentId", editCommentId);
         return "items/detail";
     }
 

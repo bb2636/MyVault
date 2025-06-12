@@ -31,6 +31,7 @@ form {
 
 .comment-form {
     display: flex;
+    width: 500px;
     align-items: center;
     gap: 10px;  /* 요소들 사이 간격 */
     margin-top: 20px;

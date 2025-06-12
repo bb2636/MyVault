@@ -45,6 +45,7 @@ public class ItemController {
         List<Comment> comments = commentService.findByCollectionItem(item);
         model.addAttribute("item", item);
         model.addAttribute("comments", comments);
+        model.addAttribute("currentUserId", 1L);
         return "items/detail";
     }
 

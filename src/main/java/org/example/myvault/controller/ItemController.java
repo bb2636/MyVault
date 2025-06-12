@@ -136,8 +136,8 @@ public class ItemController {
         item.setDescription(itemForm.getDescription());
         item.setPrivate(itemForm.isPrivate());
 
-        //기존 이미지 삭제 후 새 이미지 업로드
-        if(!imageFile.isEmpty()) {
+        //새 이미지 업로드 시 기존 이미지 삭제 후 교체
+        if(imageFile != null && !imageFile.isEmpty()) {
             //기존 이미지 삭제
             if(item.getImage() != null) {
                 File oldImage = new File(uploadPath + item.getImage());

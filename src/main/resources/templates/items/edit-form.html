@@ -14,14 +14,16 @@
             <label>Title : </label>
             <input type="text" name="title" th:field="*{title}" required /> <br>
 
-            <label>Description : </label> <br>
+            <label>Description</label> <br>
             <textarea name="description" th:field="*{description}" rows="5" cols="40" required></textarea> <br>
 
-            <label>Current Image : </label>
+            <label>Current Image : </label><br>
             <img th:src="@{'/uploads/' + ${item.image}}" alt="current image" width="200" /> <br>
 
             <label>Change Image : </label>
-            <input type="file" name="imageFile" required /> <br>
+            <input type="file" name="imageFile" /> <br>
+            <!-- 기존 이미지 정보를 유지하기 위한 hidden 필드 추가 -->
+            <input type="hidden" name="currentImage" th:value="${item.image}" />
 
             <label>Private check : </label>
             <input type="checkbox" name="private" th:field="*{private}" /> <br>

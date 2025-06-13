@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.myvault.domain.CollectionItem;
 import org.example.myvault.domain.Comment;
 import org.example.myvault.repository.CommentRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +19,7 @@ public class CommentService {
         return commentRepository.save(comment);
     }
 
+    @Query("select c from Comment c join fetch c.user where c.collectionItem = :item")
     public List<Comment> findByCollectionItem(CollectionItem item) {
         return commentRepository.findByCollectionItem(item);
     }

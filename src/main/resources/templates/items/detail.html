@@ -9,29 +9,29 @@
 <div class="container">
     <div class="content-center">
         <div th:replace="~{fragments/header :: header}"></div>
+
         <h1 th:text="${item.title}">Collection Title</h1>
         <p th:text="${item.description}">Collection description</p>
         <img alt="대표이미지" th:src="@{'/uploads/' + ${item.image}}" width="300"/>
 
-        <!--테스트용-->
+        <!-- 테스트용 -->
         <p>작성자 id: <span th:text="${item.user.id}"></span></p>
 
-        <!--작성자 본인만 수정 삭제 버튼 표시-->
+        <!-- 작성자 본인만 수정 삭제 버튼 표시 -->
         <th:block th:if="${item.user.id} == ${currentUserId}">
             <div class="action-buttons">
-                <form method="get" style="display: inline" th:action="@{'/items/' + ${item.id} + '/edit'}">
-                    <button class="custom-button edit-btn" type="submit">Edit</button>
+                <form method="get" th:action="@{'/items/' + ${item.id} + '/edit'}" style="display:inline;">
+                    <button class="btn edit-btn" type="submit">Edit</button>
                 </form>
-                <form method="post" style="display: inline" th:action="@{'/items/' + ${item.id} + '/delete'}">
-                    <button class="delete-btn" name="submit"
-                            onclick="return confirm('정말 삭제하시겠습니까?');" type="submit">Delete
-                    </button>
+                <form method="post" th:action="@{'/items/' + ${item.id} + '/delete'}" style="display:inline;">
+                    <button class="btn delete-btn" type="submit" onclick="return confirm('정말 삭제하시겠습니까?');">Delete</button>
                 </form>
             </div>
         </th:block>
         <hr>
     </div>
 </div>
+
 <div class="comments-container">
     <h2>Comments</h2>
 
@@ -40,59 +40,55 @@
         <p>댓글이 없습니다</p>
     </div>
 
+    <!-- 댓글 목록 -->
     <div th:unless="${comments.isEmpty()}">
-        <ul>
-            <li th:each="comment : ${comments}">
-                <!-- 인라인 수정 form 표시 -->
-                <th:block th:if="${editCommentId != null and comment.id == editCommentId}">
-                    <form th:action="@{'/comments/' + ${comment.id} + '/edit'}" method="post" style="margin-bottom: 10px;">
-                        <!-- CSRF 토큰 반드시 form 내부에 넣기 -->
-                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+        <div class="comment-list">
+            <ul>
+                <li class="comment-item" th:each="comment : ${comments}">
+                    <!-- 인라인 수정 form 표시 -->
+                    <th:block th:if="${editCommentId != null and comment.id != null and comment.id == editCommentId}">
+                        <form th:action="@{'/comments/' + ${comment.id} + '/edit'}" method="post" style="width: 100%;">
 
-                        <div style="display: flex; align-items: center; justify-content: space-between;">
-                            <div>
-                                <span th:text="${comment.user.nickname}">닉네임</span> |
-                                <input type="text" name="content" th:value="${comment.content}" style="width: 300px;">
-                                <span th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')}">작성일</span>
+                            <div style="display: flex; align-items: center; flex-wrap: nowrap;">
+                                <div style="display: flex; align-items: center; gap: 6px;">
+                                    <span th:if="${comment.user != null}" th:text="${comment.user.nickname}">닉네임</span> |
+                                    <input type="text" name="content" th:value="${comment.content}" style="width: 140px;">
+                                    <span class="comment-date" style="padding-left: 6px;">
+                                        <span th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd')}"></span><br>
+                                        <span th:text="${#temporals.format(comment.createdAt, 'HH:mm')}"></span>
+                                    </span>
+                                </div>
+                                <div class="action-buttons" style="gap: 3px; margin-left: auto;">
+                                    <button type="submit" class="btn edit-btn">Save</button>
+                                    <a th:href="@{'/items/' + ${item.id}}" class="btn delete-btn">Cancel</a>
+                                </div>
                             </div>
+                        </form>
+                    </th:block>
 
-                            <div style="display: flex; gap: 5px;">
-                                <button type="submit">저장</button>
-                                <a th:href="@{'/items/' + ${item.id}}"
-                                   style="text-decoration: none; padding: 6px 12px; background-color: #ccc; color: black; border-radius: 4px;">
-                                    취소
-                                </a>
+                    <!-- 일반 댓글 표시 -->
+                    <th:block th:unless="${editCommentId != null and comment.id != null and comment.id == editCommentId}">
+                        <div style="display: flex; align-items: center; flex-wrap: nowrap;">
+                            <div style="flex: 1; display: flex; align-items: center; gap: 6px;">
+                                <span th:if="${comment.user != null}" th:text="${comment.user.nickname}">닉네임</span> |
+                                <span th:text="${comment.content}">댓글 내용</span> |
+                                <span class="comment-date" style="margin-right: 12px;"
+                                      th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')}">작성일</span>
+                            </div>
+                            <div style="display: flex; align-items: center; justify-content: flex-end;  min-width: 120px;">
+                                <th:block th:if="${comment.user != null and comment.user.id == currentUserId}">
+                                    <a th:href="@{'/items/' + ${item.id} + '?editCommentId=' + ${comment.id}}" class="btn edit-btn">Edit</a>
+                                    <form method="post" th:action="@{'/comments/' + ${comment.id} + '/delete'}" style="display:inline;">
+
+                                        <button type="submit" class="btn delete-btn" onclick="return confirm('댓글을 삭제하시겠습니까?');">Delete</button>
+                                    </form>
+                                </th:block>
                             </div>
                         </div>
-                    </form>
-                </th:block>
-
-                <!-- 일반 댓글 표시 -->
-                <th:block th:unless="${editCommentId != null and comment.id == editCommentId}">
-                    <div style="display: flex; align-items:center; justify-content:space-around;  margin-top: 5px;">
-                        <div>
-                            <span th:text="${comment.user.nickname}">닉네임</span> |
-                            <span th:text="${comment.content}">댓글 내용</span> |
-                            <span th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')}">작성일</span>
-                        </div>
-
-                        <div class="action-buttons">
-                            <th:block th:if="${comment.user.id == currentUserId}">
-                                <form th:action="@{'/items/' + ${item.id} + '?editCommentId=' + ${comment.id}}" method="get"
-                                      style="display: inline">
-                                    <button class="custom-button edit-btn" type="submit">Edit</button>
-                                </form>
-                                <form method="post" style="display: inline" th:action="@{'/comments/' + ${comment.id} + '/delete'}">
-                                    <button class="delete-btn" name="submit"
-                                            onclick="return confirm('정말 삭제하시겠습니까?');" type="submit">Delete
-                                    </button>
-                                </form>
-                            </th:block>
-                        </div>
-                    </div>
-                </th:block>
-            </li>
-        </ul>
+                    </th:block>
+                </li>
+            </ul>
+        </div>
     </div>
 </div>
 

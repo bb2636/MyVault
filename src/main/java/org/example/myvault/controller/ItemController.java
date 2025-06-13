@@ -49,6 +49,10 @@ public class ItemController {
         model.addAttribute("comments", comments);
         model.addAttribute("currentUserId", 1L);
         model.addAttribute("editCommentId", editCommentId);
+
+        for(Comment comment : comments) {
+            System.out.println("comment id : " + comment.getId());
+        }
         return "items/detail";
     }
 

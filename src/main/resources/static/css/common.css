@@ -1,24 +1,21 @@
 .container {
-    max-width: 1200px;  /* 최대 너비 설정 */
-    margin: 0 auto;     /* 좌우 마진을 auto로 설정하여 가운데 정렬 */
-    padding: 0 20px;    /* 좌우 여백 추가 */
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
 }
 
-/* 컨테이너 내부 요소들 가운데 정렬 */
 .content-center {
     text-align: center;
 }
 
-/* 목록이나 테이블이 있다면 */
 .items-list {
     width: 100%;
     margin: 20px auto;
 }
 
-/* 폼이 있는 경우 */
 form {
     width: 100%;
-    max-width: 800px;   /* 폼의 최대 너비 */
+    max-width: 800px;
     margin: 0 auto;
     padding: 20px;
 }
@@ -33,17 +30,17 @@ form {
     display: flex;
     width: 500px;
     align-items: center;
-    gap: 10px;  /* 요소들 사이 간격 */
+    gap: 10px;
     margin-top: 20px;
 }
 
 .comment-form textarea {
-    flex: 1;  /* 남은 공간을 모두 차지 */
+    flex: 1;
     padding: 8px;
     border: 1px solid #ddd;
     border-radius: 4px;
-    resize: none;  /* 크기 조절 비활성화 */
-    height: 38px;  /* 버튼과 같은 높이로 설정 */
+    resize: none;
+    height: 38px;
 }
 
 .comment-form button {
@@ -53,14 +50,13 @@ form {
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    height: 38px;  /* 높이 고정 */
+    height: 38px;
 }
 
 .comment-form button:hover {
     background-color: royalblue;
 }
 
-/* 댓글 목록 스타일 */
 .comment-list {
     margin-top: 20px;
 }
@@ -72,37 +68,60 @@ form {
     padding: 10px 0;
     border-bottom: 1px solid #a0c4ff;
 }
-ul, li{
-    list-style-type: none;  /* bullet point 제거 */
-    padding: 0;             /* 기본 패딩 제거 */
-    margin: 0;              /* 기본 마진 제거 */
+
+ul, li {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
 }
 
-/* 편집/삭제 버튼 컨테이너 */
+.btn {
+    display: inline-block;
+    padding: 6px 16px;  /* 위아래 padding 6px → 텍스트가 중앙에 위치함 */
+    border-radius: 4px;
+    text-decoration: none;
+    cursor: pointer;
+    text-align: center;
+    border: none;
+    font-size: 14px;
+    height: 38px;        /* 버튼 높이 고정 */
+    box-sizing: border-box;
+    vertical-align: middle;
+    line-height: normal; /* 이걸 normal로 설정 → 글씨 깨짐 방지 */
+}
+
+/* 작성일 회색 */
+.comment-date {
+    color: #999999;
+    font-size: 14px;
+}
+
+/* action-buttons 정렬 (버튼 나란히 나오게) */
 .action-buttons {
     display: inline-flex;
     gap: 5px;
+    align-items: center;   /* 버튼 세로 정렬 중앙 */
 }
-/* 편집 버튼 특정 스타일 */
+
+/* 편집 버튼 */
 .edit-btn {
     background-color: #a0c4ff;
+    color: white;
 }
 
 .edit-btn:hover {
     background-color: royalblue;
+    color: white;
 }
 
-/* 삭제 버튼 특정 스타일 */
+/* 삭제 버튼 */
 .delete-btn {
     background-color: #ff9999;
+    color: white;
 }
 
 .delete-btn:hover {
     background-color: #ff6666;
+    color: white;
 }
 
-/* 링크 스타일 제거 */
-.btn-link {
-    text-decoration: none;
-    margin: 0;
-}

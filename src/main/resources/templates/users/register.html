@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Register - MyVault</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+</head>
+<body>
+<div class="container" style="max-width: 400px; margin: 50px auto;">
+    <h2 style="text-align: center;">Register</h2>
+    <form method="post" th:action="@{/users/register}">
+        <div style="margin-bottom: 10px;">
+            <label>Nickname:</label>
+            <input type="text" name="nickname" required style="width: 100%; padding: 8px;">
+        </div>
+        <div style="margin-bottom: 10px;">
+            <label>Password:</label>
+            <input type="password" name="password" required style="width: 100%; padding: 8px;">
+        </div>
+        <div style="text-align: center;">
+            <button type="submit" style="padding: 8px 16px;">Register</button>
+        </div>
+    </form>
+    <div th:if="${registerError}" style="color: red; text-align: center; margin-top: 10px;">
+        Nickname already exists.
+    </div>
+    <div style="text-align: center; margin-top: 10px;">
+        <a href="/users/login">Already have an account? Login</a>
+    </div>
+</div>
+</body>
+</html>

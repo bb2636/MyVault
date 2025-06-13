@@ -1,5 +1,6 @@
 package org.example.myvault.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.myvault.domain.CollectionItem;
@@ -41,24 +42,27 @@ public class ItemController {
     @GetMapping("/{id}")
     public String getItem(@PathVariable Long id,
                           @RequestParam(value = "editCommentId", required = false) Long editCommentId,
-                          Model model) {
+                          Model model,
+                          HttpServletRequest request) {
         CollectionItem item = collectionItemService.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid item Id"));
         List<Comment> comments = commentService.findByCollectionItem(item);
+        Long currentUserId = (Long) request.getSession().getAttribute("userId");
         model.addAttribute("item", item);
         model.addAttribute("comments", comments);
-        model.addAttribute("currentUserId", 1L);
+        model.addAttribute("currentUserId", currentUserId);
         model.addAttribute("editCommentId", editCommentId);
 
-        for(Comment comment : comments) {
-            System.out.println("comment id : " + comment.getId());
-        }
         return "items/detail";
     }
 
     //등록 페이지 조회
     @GetMapping("/add")
-    public String showAddForm(Model model) {
+    public String showAddForm(Model model, HttpServletRequest request) {
+        Long userId = (Long) request.getSession().getAttribute("userId");
+        if(userId != null) {
+            return "redirect:/users/login";
+        }
         model.addAttribute("item", new CollectionItem());
         return "items/form";
     }
@@ -70,9 +74,14 @@ public class ItemController {
     //등록
     @PostMapping("/add")
     public String addItem(@ModelAttribute CollectionItem item,
-                          @RequestParam("imageFile") MultipartFile imageFile) throws IOException {
-        //임시 사용자 id = 1
-        User user = userService.findById(1L).orElseThrow(() -> new IllegalArgumentException("Invalid user Id"));
+                          @RequestParam("imageFile") MultipartFile imageFile,
+                          HttpServletRequest request) throws IOException {
+        Long userId = (Long) request.getSession().getAttribute("userId");
+        if(userId == null) {
+            throw new IllegalStateException("로그인한 사용자만 등록 가능합니다");
+        }
+        User user = userService.findById(userId)
+                        .orElseThrow(() -> new IllegalArgumentException("Invalid user Id"));
         item.setUser(user);
         item.setCreatedAt(LocalDateTime.now());
 
@@ -96,12 +105,14 @@ public class ItemController {
 
     //마이페이지용 조회
     @GetMapping("/my-items")
-    public String myItems(Model model) {
-        User user = userService.findById(1L)
+    public String myItems(Model model, HttpServletRequest request) {
+        Long userId = (Long) request.getSession().getAttribute("userId");
+        if(userId != null) {
+            return "redirect:/users/login";
+        }
+        User user = userService.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user Id"));
-
         List<CollectionItem> myItem = collectionItemService.findByUser(user);
-        log.info("조회된 아이템 수: {}", myItem.size());
         model.addAttribute("items", myItem);
         return "items/my-item";
     }

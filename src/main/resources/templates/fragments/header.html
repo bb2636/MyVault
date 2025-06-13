@@ -1,16 +1,6 @@
-<!--<!DOCTYPE html>-->
-<!--<html xmlns:th="http://www.thymeleaf.org">-->
-<!--<head>-->
-<!--    <meta charset="UTF-8">-->
-<!--    <title th:replace="${title}">MyVault</title>-->
-
-<!--</head>-->
-<!--<body>-->
-<!-- 헤더 -->
 <div th:fragment="header">
     <div class="header">
         <style>
-            /* 모든 a 태그에 대한 기본 스타일 */
             a {
                 text-decoration: none !important;
                 color: inherit;
@@ -53,39 +43,54 @@
                 justify-content: center;
                 margin: 20px 0;
                 cursor: pointer;
-                position: relative; /* 배너 위치 조정 */
+                position: relative;
             }
 
             .banner h2 {
-                color: white; /* 텍스트 색상 변경 */
+                color: white;
                 font-size: 32px;
                 text-align: center;
-                z-index: 1; /* 텍스트를 앞으로 */
-                text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2); /* 가독성을 위한 그림자 */
+                z-index: 1;
+                text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
             }
 
-            /* 배너 호버 효과 */
             .banner:hover {
                 background-color: #8ab4ff;
             }
         </style>
+
+        <!-- 사이트 타이틀 -->
         <a class="header-title" href="/items">MyVault</a>
 
+        <!-- 우측 버튼 영역 -->
         <div class="header-buttons">
-            <a href="/items/add">
-                <button type="button">Collection Add</button>
-            </a>
-            <a href="/items/my-items">
-                <button type="button">My Collection</button>
-            </a>
+            <!-- 로그인 상태일 때만 -->
+            <th:block th:if="${currentUserId} != null">
+                <a href="/items/add">
+                    <button type="button">Collection Add</button>
+                </a>
+                <a href="/items/my-items">
+                    <button type="button">My Collection</button>
+                </a>
+                <a href="/users/logout">
+                    <button type="button">Logout</button>
+                </a>
+            </th:block>
+
+            <!-- 비로그인 상태일 때만 -->
+            <th:block th:unless="${currentUserId} != null">
+                <a href="/users/login">
+                    <button type="button">Login</button>
+                </a>
+                <a href="/users/register">
+                    <button type="button">Register</button>
+                </a>
+            </th:block>
         </div>
     </div>
 
     <!-- 배너 -->
-    <div class="banner" th:onclick="|location.href='@{/intro}'|"
-         th:fragment="banner">
+    <div class="banner" th:onclick="|location.href='@{/intro}'|" th:fragment="banner">
         <h2>MyVault를 소개합니다 →</h2>
     </div>
 </div>
-<!--</body>-->
-<!--</html>-->

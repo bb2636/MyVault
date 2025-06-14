@@ -10,6 +10,10 @@
     <div class="content-center">
         <div th:replace="fragments/header :: header"></div>
         <h1>My Collections</h1>
+        <!-- Welcome 문구 -->
+        <h2 th:if="${currentUserNickname != null}" style="margin-bottom: 20px;">
+            Welcome, <span th:text="${currentUserNickname}">nickname</span>님! 소장품 목록
+        </h2>
         <div th:if="${#lists.isEmpty(items)}">
             <p>등록된 소장품이 없습니다</p>
         </div>

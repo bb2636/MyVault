@@ -66,6 +66,10 @@
         <div class="header-buttons">
             <!-- 로그인 상태일 때만 -->
             <th:block th:if="${currentUserId} != null">
+                <span style="font-weight: bold; margin-right: 10px;">
+                    Welcome,
+                    <span th:text="${currentUserNickname}">nickname</span>!
+                </span>
                 <a href="/items/add">
                     <button type="button">Collection Add</button>
                 </a>

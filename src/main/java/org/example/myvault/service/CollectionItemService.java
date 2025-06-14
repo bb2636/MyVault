@@ -30,4 +30,7 @@ public class CollectionItemService {
         return collectionItemRepository.findByUser(user);
     }
     public void delete(CollectionItem item) {collectionItemRepository.delete(item);}
+    public List<CollectionItem> findTop3ByOrderByCreatedAtDesc() {
+        return collectionItemRepository.findTop3ByOrderByCreatedAtDesc();
+    }
 }

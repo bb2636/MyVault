@@ -8,7 +8,7 @@
 <body>
 <div class="container">
     <div class="content-center">
-        <div th:replace="fragments/header :: header"></div>
+        <div th:replace="~{fragments/header :: header}"></div>
         <h1>My Collections</h1>
         <!-- Welcome 문구 -->
         <h2 th:if="${currentUserNickname != null}" style="margin-bottom: 20px;">

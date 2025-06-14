@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="">
 <head>
     <meta charset="UTF-8">
     <title>MyVault 소개</title>
@@ -47,6 +47,7 @@
 </head>
 <body>
 <div class="container">
+    <div th:replace="~{fragments/header :: header}"></div>
     <h1>MyVault</h1>
     <p><strong>vault</strong> - 문서와 파일을 저장하고 관리하는 저장소</p>
     <p>나만의 금고 (소장품, 스토리 담는 공간)</p>

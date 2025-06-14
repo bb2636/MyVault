@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="">
 <head>
     <meta charset="UTF-8">
     <title>Login - MyVault</title>
@@ -8,7 +8,7 @@
 <body>
 <div class="container" style="max-width: 400px; margin: 50px auto;">
     <h2 style="text-align: center;">Login</h2>
-    <form method="post" th:action="@{/users/login}">
+    <form method="post" th:action="@{/perform_login}">
         <div style="margin-bottom: 10px;">
             <label>Nickname:</label>
             <input type="text" name="nickname" required style="width: 100%; padding: 8px;">
@@ -21,8 +21,8 @@
             <button type="submit" style="padding: 8px 16px;">Login</button>
         </div>
     </form>
-    <div th:if="${loginError}" style="color: red; text-align: center; margin-top: 10px;">
-        Invalid nickname or password.
+    <div th:if="${param.error}" style="color:red;">
+        아이디 또는 비밀번호가 올바르지 않습니다.
     </div>
     <div style="text-align: center; margin-top: 10px;">
         <a href="/users/register">Don't have an account? Register</a>

@@ -3,13 +3,14 @@ package org.example.myvault.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.myvault.config.CustomUserDetails;
 import org.example.myvault.domain.CollectionItem;
 import org.example.myvault.domain.Comment;
 import org.example.myvault.domain.User;
 import org.example.myvault.service.CollectionItemService;
 import org.example.myvault.service.CommentService;
-import org.example.myvault.service.UserService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -28,26 +29,33 @@ import java.util.UUID;
 public class ItemController {
     private final CollectionItemService collectionItemService;
     private final CommentService commentService;
-    private final UserService userService;
 
-    //전체조회
+    @Value("${myvault.upload.path}")
+    private String uploadPath;
+
+    // 전체 조회
     @GetMapping
     public String listItems(Model model) {
         List<CollectionItem> items = collectionItemService.findAll();
+        List<CollectionItem> recentItems = collectionItemService.findTop3ByOrderByCreatedAtDesc();
+
         model.addAttribute("items", items);
+        model.addAttribute("recentItems", recentItems);
+
         return "items/list";
     }
 
-    //상세조회
+    // 상세 조회
     @GetMapping("/{id}")
     public String getItem(@PathVariable Long id,
                           @RequestParam(value = "editCommentId", required = false) Long editCommentId,
                           Model model,
-                          HttpServletRequest request) {
+                          @AuthenticationPrincipal CustomUserDetails userDetails) {
         CollectionItem item = collectionItemService.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid item Id"));
         List<Comment> comments = commentService.findByCollectionItem(item);
-        Long currentUserId = (Long) request.getSession().getAttribute("userId");
+        Long currentUserId = (userDetails != null) ? userDetails.getUser().getId() : null;
+
         model.addAttribute("item", item);
         model.addAttribute("comments", comments);
         model.addAttribute("currentUserId", currentUserId);
@@ -56,86 +64,68 @@ public class ItemController {
         return "items/detail";
     }
 
-    //등록 페이지 조회
+    // 등록 폼
     @GetMapping("/add")
-    public String showAddForm(Model model, HttpServletRequest request) {
-        Long userId = (Long) request.getSession().getAttribute("userId");
-        if(userId != null) {
+    public String showAddForm(Model model, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        if (userDetails == null) {
             return "redirect:/users/login";
         }
         model.addAttribute("item", new CollectionItem());
         return "items/form";
     }
 
-    //이미지 파일 저장 경로
-    @Value("${myvault.upload.path}")
-    private String uploadPath;
-
-    //등록
+    // 등록 처리
     @PostMapping("/add")
     public String addItem(@ModelAttribute CollectionItem item,
                           @RequestParam("imageFile") MultipartFile imageFile,
-                          HttpServletRequest request) throws IOException {
-        Long userId = (Long) request.getSession().getAttribute("userId");
-        if(userId == null) {
+                          @AuthenticationPrincipal CustomUserDetails userDetails) throws IOException {
+        if (userDetails == null) {
             throw new IllegalStateException("로그인한 사용자만 등록 가능합니다");
         }
-        User user = userService.findById(userId)
-                        .orElseThrow(() -> new IllegalArgumentException("Invalid user Id"));
+        User user = userDetails.getUser();
         item.setUser(user);
         item.setCreatedAt(LocalDateTime.now());
 
-        //이미지 저장
         if (!imageFile.isEmpty()) {
-            //저장경로
             File dir = new File(uploadPath);
-            if (!dir.exists()) {
-                dir.mkdirs();
-            }
-            //파일명
+            if (!dir.exists()) dir.mkdirs();
+
             String fileName = imageFile.getOriginalFilename();
             String newFileName = UUID.randomUUID() + "_" + fileName;
-            //저장
             imageFile.transferTo(new File(uploadPath + newFileName));
-            item.setImage(newFileName); //db에는 파일명만 저장
+            item.setImage(newFileName);
         }
         collectionItemService.save(item);
         return "redirect:/items";
     }
 
-    //마이페이지용 조회
+    // 마이 아이템
     @GetMapping("/my-items")
-    public String myItems(Model model, HttpServletRequest request) {
-        Long userId = (Long) request.getSession().getAttribute("userId");
-        if(userId != null) {
+    public String myItems(Model model, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        if (userDetails == null) {
             return "redirect:/users/login";
         }
-        User user = userService.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid user Id"));
-        List<CollectionItem> myItem = collectionItemService.findByUser(user);
-        model.addAttribute("items", myItem);
+        User user = userDetails.getUser();
+        List<CollectionItem> myItems = collectionItemService.findByUser(user);
+        model.addAttribute("items", myItems);
         return "items/my-item";
     }
 
-    //삭제
+    // 삭제
     @PostMapping("/{id}/delete")
     public String deleteItem(@PathVariable Long id) {
         CollectionItem item = collectionItemService.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid item Id"));
-        //이미지 삭제
+
         if (item.getImage() != null) {
-            //저장된 이미지 불러옴
             File imageFile = new File(uploadPath + item.getImage());
-            if (imageFile.exists()) {
-                imageFile.delete();
-            }
+            if (imageFile.exists()) imageFile.delete();
         }
-        //db 삭제
         collectionItemService.delete(item);
         return "redirect:/items";
     }
 
-    //수정 폼 보여주기
+    // 수정 폼
     @GetMapping("/{id}/edit")
     public String showEditForm(@PathVariable Long id, Model model) {
         CollectionItem item = collectionItemService.findById(id)
@@ -144,6 +134,7 @@ public class ItemController {
         return "items/edit-form";
     }
 
+    // 수정 처리
     @PostMapping("/{id}/edit")
     public String editItem(@PathVariable Long id,
                            @ModelAttribute CollectionItem itemForm,
@@ -155,16 +146,11 @@ public class ItemController {
         item.setDescription(itemForm.getDescription());
         item.setPrivate(itemForm.isPrivate());
 
-        //새 이미지 업로드 시 기존 이미지 삭제 후 교체
         if (imageFile != null && !imageFile.isEmpty()) {
-            //기존 이미지 삭제
             if (item.getImage() != null) {
                 File oldImage = new File(uploadPath + item.getImage());
-                if (oldImage.exists()) {
-                    oldImage.delete();
-                }
+                if (oldImage.exists()) oldImage.delete();
             }
-            //새 이미지 저장
             String fileName = imageFile.getOriginalFilename();
             String newFileName = UUID.randomUUID() + "_" + fileName;
             imageFile.transferTo(new File(uploadPath + newFileName));
@@ -174,7 +160,7 @@ public class ItemController {
         return "redirect:/items/" + id;
     }
 
-    //이미지 삭제 버튼 클릭
+    // 이미지 삭제
     @GetMapping("/{id}/delete-image")
     public String deleteImage(@PathVariable Long id) {
         CollectionItem item = collectionItemService.findById(id)
@@ -182,9 +168,7 @@ public class ItemController {
 
         if (item.getImage() != null) {
             File oldImage = new File(uploadPath + item.getImage());
-            if (oldImage.exists()) {
-                oldImage.delete();
-            }
+            if (oldImage.exists()) oldImage.delete();
             item.setImage(null);
         }
         collectionItemService.save(item);

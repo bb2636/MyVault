@@ -36,8 +36,8 @@ public class ItemController {
     // 전체 조회
     @GetMapping
     public String listItems(Model model) {
-        List<CollectionItem> items = collectionItemService.findAll();
-        List<CollectionItem> recentItems = collectionItemService.findTop3ByOrderByCreatedAtDesc();
+        List<CollectionItem> items = collectionItemService.findAllPublic();
+        List<CollectionItem> recentItems = collectionItemService.findTop3ByIsPrivateFalseOrderByCreatedAtDesc();
 
         model.addAttribute("items", items);
         model.addAttribute("recentItems", recentItems);

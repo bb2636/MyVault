@@ -10,7 +10,9 @@ public interface CollectionItemRepository extends JpaRepository<CollectionItem, 
     // 마이페이지 용: 해당 유저의 소장품 전체 조회
     List<CollectionItem> findByUser(User user);
     //최근 등록된 3개 보여주기
-    List<CollectionItem> findTop3ByOrderByCreatedAtDesc();
+    List<CollectionItem> findTop3ByIsPrivateFalseOrderByCreatedAtDesc();
     // 공개 게시판 용: 공개된 소장품 전체 조회
     List<CollectionItem> findByIsPrivateFalse();
+
+    List<CollectionItem> findByIsPrivateFalseOrderByCreatedAtDesc();
 }

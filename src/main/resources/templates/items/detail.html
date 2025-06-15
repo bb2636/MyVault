@@ -14,9 +14,6 @@
         <p th:text="${item.description}">Collection description</p>
         <img alt="대표이미지" th:src="@{'/uploads/' + ${item.image}}" width="300"/>
 
-        <!-- 테스트용 -->
-        <p>작성자 id: <span th:text="${item.user.id}"></span></p>
-
         <!-- 작성자 본인만 수정 삭제 버튼 표시 -->
         <th:block th:if="${item.user.id} == ${currentUserId}">
             <div class="action-buttons">
@@ -93,7 +90,7 @@
 </div>
 
 <!-- 댓글 작성 폼 -->
-<form class="comment-form" method="post" th:action="@{/comments/add}">
+<form class="comment-form" method="post" th:action="@{'/comments/items/' + ${item.id} + '/comments'}">
     <input name="itemId" th:value="${item.id}" type="hidden">
     <textarea name="content" placeholder="댓글을 입력하세요" required></textarea>
     <button type="submit">등록</button>

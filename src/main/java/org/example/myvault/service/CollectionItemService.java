@@ -17,7 +17,9 @@ public class CollectionItemService {
     public CollectionItem save(CollectionItem item) {
         return collectionItemRepository.save(item);
     }
-
+    public List<CollectionItem> findAllPublic() {
+        return collectionItemRepository.findByIsPrivateFalseOrderByCreatedAtDesc();
+    }
     public List<CollectionItem> findAll() {
         return collectionItemRepository.findAll();
     }
@@ -30,7 +32,7 @@ public class CollectionItemService {
         return collectionItemRepository.findByUser(user);
     }
     public void delete(CollectionItem item) {collectionItemRepository.delete(item);}
-    public List<CollectionItem> findTop3ByOrderByCreatedAtDesc() {
-        return collectionItemRepository.findTop3ByOrderByCreatedAtDesc();
+    public List<CollectionItem> findTop3ByIsPrivateFalseOrderByCreatedAtDesc() {
+        return collectionItemRepository.findTop3ByIsPrivateFalseOrderByCreatedAtDesc();
     }
 }

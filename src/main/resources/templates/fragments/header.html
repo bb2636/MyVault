@@ -70,7 +70,9 @@
                     <span>Welcome, <span sec:authentication="principal.user.nickname">nickname</span>!</span>
                     <a href="/items/add"><button>Collection Add</button></a>
                     <a href="/items/my-items"><button>My Collection</button></a>
-                    <a href="/logout"><button>Logout</button></a>
+                    <form th:action="@{/users/logout}" method="post">
+                        <button type="submit">Logout</button>
+                    </form>
                 </th:block>
 
                 <th:block sec:authorize="isAnonymous()">

@@ -19,6 +19,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private final UserRepository userRepository;
+    private final LoginSuccessHandler loginSuccessHandler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -33,6 +34,7 @@ public class SecurityConfig {
                         .usernameParameter("nickname")
                         .passwordParameter("password")
                         .defaultSuccessUrl("/items", true)
+                        .successHandler(loginSuccessHandler)
                         .permitAll()
                 )
                 .logout(logout -> logout
